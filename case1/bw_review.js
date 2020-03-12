@@ -38,31 +38,36 @@ window.onload = init();
 
 function init(){
     var stars = document.querySelectorAll("span#stars img");
+    //Changes the cursor and updates the stars when the JavaScript loads
     for(var i = 0; i < stars.length; i++){
         stars[i].style.cursor = "pointer";
         stars[i].addEventListener("mouseenter", lightStars);
     }
-    document.addEventListener("keyup", updateCount);
+    //Updates the character count when something is typed in the textarea input box
+    document.getElementById("comment").addEventListener("keyup", updateCount);
 }
 
 function lightStars(e){
     var starNumber = e.target.alt;
     var stars = document.querySelectorAll("span#stars img");
+    //Adds a star when hovering over an empty one
     for(var i = 0; i < starNumber; i++){
         stars[i].src = "bw_star2.png";
     }
     for(var i = starNumber; i < 5; i++){
         stars[i].src = "bw_star.png";
     }
-    document.getElementById("rating").innerHTML = starNumber + " stars";
+    //Displays the number of stars on the side and stops it when the mouse leaves the hover area
+    document.getElementById("rating").value = starNumber + " stars";
     e.target.addEventListener("mouseleave", turnOffStars);
-    e.target.addEventListener("mouseleave", function(){
+    e.target.addEventListener("click", function(){
         e.target.removeEventListener("mouseleave", turnOffStars);
     });
 }
 
 function turnOffStars(){
     var stars = document.querySelectorAll("span#stars img");
+    //Stops changing the stars when the star is clicked
     for(var i = 0; i < stars.length; i++){
         stars[i].src = "bw_star.png";
     }
@@ -70,17 +75,18 @@ function turnOffStars(){
 } 
 
 function updateCount(){
-    var commentText = document.getElementsByTagName("textarea");
+    var commentText = document.getElementById("comment").value;
     var charCount = countCharacters(commentText);
-    wordCountBox(wordCount);
-    wordCount = charCount + "/1000"
+    var wordCountBox = document.getElementById("wordCount");
+    wordCountBox.value = charCount + "/1000";
+    //If the number of characters exceed 1000, the style changes
     if(charCount > 1000){
-        wordCount.style.color = "white";
-        wordCount.style.backgroundColor = "red";
+        wordCountBox.style.color = "white";
+        wordCountBox.style.backgroundColor = "red";
     }
     else{
-        wordCount.style.color = "black";
-        wordCount.style.backgroundColor = "white";
+        wordCountBox.style.color = "black";
+        wordCountBox.style.backgroundColor = "white";
     }
 }
   
