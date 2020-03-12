@@ -89,8 +89,6 @@ function updateCount(){
         wordCountBox.style.backgroundColor = "white";
     }
 }
-  
-  
 /*=================================================================*/
 
 function countCharacters(textStr) {
