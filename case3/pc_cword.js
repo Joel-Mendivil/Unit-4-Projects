@@ -65,6 +65,7 @@ function init(){
    var downID = ;
    acrossClue = document.getElementById("acrossID");
    downClue = document.getElementById("downID");
+   
 }
 
 function formatPuzzle(puzzleLetter){
