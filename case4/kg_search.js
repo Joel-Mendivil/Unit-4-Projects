@@ -1,16 +1,25 @@
 "use strict";
 
 /*
-   New Perspectives on HTML5, CSS3 and JavaScript 6th Edition
+   New Perspectives on HTML5, CSS3, and JavaScript 6th Edition
    Tutorial 11
    Case Problem 4
 
    Wordsearch Game Script
    
    Filename: kg_search.js
-   Author: 
-   Date:   
+   Author: Pete Burnham
+   Date:   2018-03-01
    
+   
+   Global Variables
+   
+   allCells
+      References all of the cells in the word search table
+      
+   found
+      Stores a Boolean value indicating whether the currently
+      selected letters represents a word in the word search list.
    
    Function List
    
@@ -25,7 +34,97 @@
 
 */
 
+var allCells;
+var found = false;
 
+window.onload = init;
+
+function init() {
+   document.querySelectorAll("aside h1")[0].innerHTML = wordSearchTitle;
+   document.getElementById("wordTable").innerHTML = drawWordSearch(letterGrid, wordGrid);
+   document.getElementById("wordList").innerHTML = showList(wordArray);
+   
+   allCells = document.querySelectorAll("table#wordSearchTable td");
+   
+   for (var i = 0; i < allCells.length; i++) {
+      allCells[i].style.cursor = "pointer";
+      allCells[i].addEventListener("mousedown", startRecording);
+   }
+   
+   document.getElementById("wordSearchTable").onmouseup = function() {
+      stopRecording();
+      var wordList = document.querySelectorAll("ul#wordSearchList li");
+      var solved = true;
+      for (var i = 0; i < wordList.length; i++) {
+         if (wordList[i].style.textDecoration !== "line-through") {
+            solved = false;
+            break;
+         }
+      }
+      if (solved) {
+         alert("You solved the puzzle!");
+      }
+   };
+   
+   document.getElementById("showSolution").onclick = function() {
+      for (var i = 0; i < allCells.length; i++) {
+         if (allCells[i].className === "wordCell") {
+            allCells[i].style.backgroundColor = "rgb(191, 191, 255)";
+         }
+      }
+   };
+
+}
+
+function startRecording(e) {
+   document.getElementById("pickedLetters").value += e.target.textContent;
+   if (e.target.style.backgroundColor !== "rgb(28, 255, 132)") {
+      e.target.style.backgroundColor = "rgb(255, 197, 153)";
+   }
+   for (var i = 0; i < allCells.length; i++) {
+      allCells[i].addEventListener("mouseenter", continueRecording);
+   }
+   e.preventDefault();
+}
+
+function continueRecording(e) {
+   if (e.target.style.backgroundColor !== "rgb(28, 255, 132)") {
+      e.target.style.backgroundColor = "rgb(255, 197, 153)";
+   }
+   document.getElementById("pickedLetters").value += e.target.textContent;
+}
+
+function stopRecording() {
+   for (var i = 0; i < allCells.length; i++) {
+      allCells[i].removeEventListener("mouseenter", continueRecording);
+   }
+   checkLetters();
+}
+  
+
+function checkLetters() {
+   var currentLetters = document.getElementById("pickedLetters").value;
+   var wordList = document.querySelectorAll("ul#wordSearchList li");
+   for (var i = 0; i < wordList.length; i++) {
+      if (currentLetters === wordList[i].textContent) {
+         wordList[i].style.textDecoration = "line-through";
+         wordList[i].style.color = "rgb(191, 191, 191)";
+         found = true;
+      }
+   }
+   
+   for (var i = 0; i < allCells.length; i++) {
+      if (allCells[i].style.backgroundColor !== "rgb(28, 255, 132)") {
+         if (allCells[i].style.backgroundColor === "rgb(255, 197, 153)" && found) {
+            allCells[i].style.backgroundColor = "rgb(28, 255, 132)";
+         } else {
+            allCells[i].style.backgroundColor = "";
+         }
+      }
+   }
+   document.getElementById("pickedLetters").value = "";
+   found = false;
+}
 
 
 
